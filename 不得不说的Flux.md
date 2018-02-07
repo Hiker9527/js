@@ -4,7 +4,7 @@ Flux是由facebook工程师提出来的，用来解决React状态管理的一种
 
 正如其名，Flux的核心思想就是数据和逻辑的永远单向流动。
 
-![image](https://github.com/Hiker9527/js/static/flux-overview.png)
+![image](https://github.com/Hiker9527/js/blob/master/static/flux-overview.png)
 
 在Flux应用中，数据Action到dispatcher，再到store，最终到view的路线永远是单向不可逆的。在Flux中，所有的数据都保存在store中，修改store的唯一方法是通过dispatcher分发action，保证了store数据在应用中的确定性。
 
