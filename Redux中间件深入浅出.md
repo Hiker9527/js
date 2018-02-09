@@ -213,3 +213,60 @@ store => next => action => {
 ```
 
 我们之前说过action必须是一个对象，但是在这里action有可能是函数。在action被正式传入原始的`store.dispatch`之前，先判断action是不是函数，如果是函数就执行，如果不是就调用next。
+
+#### 利用middleware实现Redux的异步数据流
+我们在前面多次强调reducer必须是隔离了副作用的纯函数，action必须是普通的javascript对象。显然异步是有副作用的，此时我么就可以利用中间件来处理带有副作用的action。关于action，准确的说应该是传入reducer的action必须是普通的javascript对象，中间件的作用就是action在传入原始的store.dispatch之前拦截action进行一些操作。所以我们也可以定义异步的action，编写一个中间件来处理它使它符合传入reducer的要求。
+
+下面是`redux-promise`中间件的实现。
+```
+import { isFSA } from 'flux-standard-action';
+
+function isPromise(val) {
+  return val && typeof val.then === 'function';
+}
+
+export default function promiseMiddleware({ dispatch }) {
+  return next => action => {
+    // 非FSA标准的action，处理与redux-chunk类似
+    if (!isFSA(action)) {
+      return isPromise(action)
+        ? action.then(dispatch)
+        : next(action);
+    }
+    // FSA标准的action，先判断action.payload是不是一个promise，
+    // 如果是promise就先执行promise并用返回的结果重写action，
+    // 然后用dispatch发送，此时的action就是正常的action。
+    // 如果不是promise就进入下一个中间件
+    return isPromise(action.payload)
+      ? action.then(
+          result => dispatch({ ...action, payload: result }),
+          error => {
+            dispatch({ ...action, payload: error, error: true });
+            return Promise.reject(error);
+          }
+        )
+      : next(action);
+  }
+}
+```
+`redux-promise`兼容了FSA标准，在定义action的时候，如果异步部分在`payload`中，就先执行异步promise，然后将返回的结果重新放在`payload`中再调用一次`dispatch`。
+
+我们写一个符合`redux-promise`的action：
+```
+const foo = () => ({
+  type: 'FOO',
+  payload: new Promise()
+})
+```
+或者
+```
+const foo = async () => {
+  const retult = new Promise();
+
+  return {
+    type: 'FOO',
+    payload: result,
+  }
+}
+```
+
