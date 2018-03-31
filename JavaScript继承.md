@@ -55,19 +55,19 @@ console.log(sub2.arr); // 1,2
 #### 借用构造函数
 使用new命令调用构造函数创建实例对象时，首先会创建一个空的对象，然后把这个空的对象赋值给构造函数内部的this。最后返回这个新创建的对象。构造继承的原理就是将子类的this作用在超类的构造函数上，此时超类只是被当作一个普通的函数调用。
 ```
-function Super() {
-  this.val = 1;
+function Super(val) {
+  this.val = val;
   this.arr = [1];
 }
 
-function Sub() {
- Super.call(this);
+function Sub(val) {
+ Super.call(this, val);
  this.sayHello = function(name) {
    console.log(`Hello ${name}`);
  };
 }
 
-const sub = new Sub();
+const sub = new Sub(1);
 
 console.log(sub.val); // 1
 sub1.sayHello('Jone'); // Hello Jone
