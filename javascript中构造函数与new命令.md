@@ -58,7 +58,18 @@ function Keight() {
 - 将空对象赋值给构造函数内部的`this`关键字
 - 开始执行构造函数内部的代码
 也就是说，构造函数内部，`this`指向的是一个新生成的对象，所有针对`this`的操作，都会发生在这个空对象上。构造函数之所谓构造函数，意思是这个函数的目的就是操作一个空对象（即`this`对象），将其构造为需要的样子。
-
+（本人添加：
+如果不是用 new 命令而是一个 new 方法来实现的话，那么 new 的执行过程应该是下面的样子
+```
+Function.prototype.new = function() {
+  // 创建一个新对象，它继承自构造函数的原型对象
+  var that = Object.create(this.prototype);
+  // 调用构造器函数，绑定this到新对象上
+  var other = this.apply(that, arguments);
+  // 如果它返回的不是一个对象，就返回该新对象
+  return (typeof other === 'object' && other) || that;
+}
+```）
 以上是`new`命令的基本原理，这个很重要。以下会用具体实例来验证该原理的过程。
 
 #### 3.2基本用法
