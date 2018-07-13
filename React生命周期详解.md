@@ -43,14 +43,14 @@ class MyComponent extends React.Component {
 
 然后组件通过mountComponent开始组件的初始化工作，诸如初始化props、content等参数，执行`getInitialState`获取初始化状态，初始化更新队列和更新状态，执行组件的初始化挂载。
 
-如果组件中存在`componentWillMount`方法。接着就是组件的渲染`render`。`componentDidMount`是在组件渲染完成之后执行的。
+构造函数执行完成之后就会，如果组件中存在`componentWillMount`方法，就执行这个钩子方法。接着就是组件的渲染方法`render`函数。`componentDidMount`方法则是在组件渲染完成之后执行的。
 
 如果在当前的组件中嵌套了其它的组件，这个时候的这两个组件各自的生命周期是一个什么样的关系。其实React组件在渲染的时候是通过递归来完成的，父组件的渲染早于子组件的渲染，并且只有所有的子组件渲染完成后，父组件的渲染才算完成，也就是说父组件的`componentWillMount`执行比子组件的`componentWillMount`早，`componentDidMount`比子组件晚。用一张图来表示：(生命周期流程图)
 
 ![image](https://github.com/Hiker9527/js/blob/master/static/mount-component.png)
 
 - #### 组件存续期间的更新（updateComponent）
-当组件初始化挂载完成之后，就由updateComponent负责管理生命周期中的`componentWillReceiveProps`、`shouldComponentUpdate`、`componentWillUpdate`、`componentWillUpdate`、`render`以及`componentDidUpdate`这几个生命周期钩子方法。
+当组件初始化挂载完成之后，就由updateComponent负责管理生命周期中的`componentWillReceiveProps`、`shouldComponentUpdate`、`componentWillUpdate`、`render`以及`componentDidUpdate`这几个生命周期钩子方法。
 
 ```
 class MyComponent extends React.Component {
@@ -82,13 +82,13 @@ class MyComponent extends React.Component {
   }
 }
 ```
-当组件发生变化的时候，就要通过`updateComponent`来更新组件了。在这个阶段的生命周期方法中，`componentWillReceiveProps`首先被调用，React会把最新的`props`传给这个方法。
+当组件发生变化的时候，就要通过*updateComponent*来更新组件了。在这个阶段的生命周期方法中，`componentWillReceiveProps`首先被调用，React会把最新的`props`传给这个方法。
 
-调用`shouldComponentUpdate`可以决定是否要继续更新组件。如果返回`true`就继续更新，否则将停止本次更新。因为`updateCompenent`也是递归更新所有子组件的，可以子组件中利用这个函数来阻止那些没有必要更新的，提升应用的性能。
+`shouldComponentUpdate`会接收两个参数`nextProps`和`nextState`，分别表示下一个`props`和`state`。调用`shouldComponentUpdate`可以决定是否要继续更新组件。如果返回`true`就继续更新，否则将停止本次更新。因为`updateCompenent`也是递归更新所有子组件的，可以在子组件中利用这个函数来阻止那些没有必要更新的，提升应用的性能。
 
-如果没有提供`shouldComponentUpdate`方法或者这个方法返回了`true`，updateComponent就会继续往下执行，来到`componentWillUpdate`,接着更新视图，完成组件的更新后执行该阶段的最后一个方法`componentDidUpdate`。
+如果没有提供`shouldComponentUpdate`方法或者这个方法返回了`true`，updateComponent就会继续往下执行，来到`componentWillUpdate`,接着更新视图，执行`render`，完成组件的更新后执行该阶段的最后一个方法`componentDidUpdate`。
 
-不要在`shouldComponentUpdate`和`componentWillUpdate`方法中调用`setState`，这样会导致循环调用，浏览器内存耗尽奔溃。
+注意，不要在`shouldComponentUpdate`和`componentWillUpdate`方法中调用`setState`，这样会导致循环调用，浏览器内存耗尽奔溃。
 
 ![image](https://github.com/Hiker9527/js/blob/master/static/update-component.png)
 - #### 组件卸载（unmoutComponent）
