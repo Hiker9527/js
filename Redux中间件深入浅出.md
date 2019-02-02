@@ -1,3 +1,6 @@
+Redux源码已经更新，文章还没来的及更新，以Redux最新代码为准！
+
+
 Redux的作者对于中间件的解释是“It provides a third-party extension point between dispatching an action, and the moment it reaches the reducer.”大致的意思是说它在dispatch了一个action后和在reducer接收到这个action之前提供了一个三方的扩展。它提供了一个分类处理action的机会，在middleware中拦截所有的action，然后改变这些action的行为。
 
 #### 一个场景
