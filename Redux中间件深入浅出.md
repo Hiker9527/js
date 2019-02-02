@@ -125,7 +125,7 @@ var middlewareAPI = {
     dispatch: (action) => dispatch(action)
 }
 ```
-不管前面几行，我们假设applyMiddleware被正确执行了。函数体中首先调用`createStore`的方法和前面传入的参数创建了一个store。然后用一个变量保存了store.dispatch，有定义了一个数组变量chain。还定义了一个有`getState`和`dispatch`的对象`middlewareAPI`。这个对象包含了store的两个核型的方法，其实也就是一个不完全的store。
+不管前面几行，我们假设applyMiddleware被正确执行了。函数体中首先调用`createStore`的方法和前面传入的参数创建了一个store。然后用一个变量保存了store.dispatch，又定义了一个数组变量chain。还定义了一个有`getState`和`dispatch`的对象`middlewareAPI`。这个对象包含了store的两个核心的方法，其实也就是一个不完全的store。
 
 
 ```
