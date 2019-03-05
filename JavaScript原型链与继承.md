@@ -204,7 +204,7 @@ const sub = new SybType('shawnwang', 'haha');
 ```
 function object(o) {
     function F() {}
-    F.prototype.o;
+    F.prototype = o;
     return new F();
 }
 ```
