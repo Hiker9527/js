@@ -41,7 +41,7 @@ this.name = 'shawnWang';
 console.log(this.name);    // 'shawnWang' 
 console.log(global.name);  // undefined
 ```
-为什么这里的`this`是一个空对象，而不是表现的像浏览器中一样指向`global`对象？这里其实跟Node的实现机制有关。node中每个文件都是一个模块，我们在当前文件中的代码并不是在真正的全局环境中执行，这些代码在运行前都会经过一次包装，所以这些代码最后都是在经过包装的模块中执行。当前代码在运行时，最外层的`this`指向的是`module.exports`，具体还要去了解node的模块机制。
+为什么这里的`this`是一个空对象，而不是表现的像浏览器中一样指向`global`对象？这里其实跟Node的模块机制有关。node中每个文件都是一个模块，我们在当前文件中的代码并不是在真正的全局环境中执行，这些代码在运行前都会经过一次包装，所以这些代码最后都是在经过包装的模块中执行。当前代码在运行时，最外层的`this`指向的是`module.exports`，具体还要去了解node的模块机制。
 ```
 this.a = 1;
 console.log(module.exports.a);        // 1
